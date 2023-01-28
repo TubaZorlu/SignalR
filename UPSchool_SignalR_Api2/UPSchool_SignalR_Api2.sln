@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPSchool_SignalR_Api2", "UPSchool_SignalR_Api2\UPSchool_SignalR_Api2.csproj", "{B5EAB2C7-132A-4CA2-A5DD-2796AF6D8B99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{ED77806E-B633-4F74-9AB9-E95989165CB2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5EAB2C7-132A-4CA2-A5DD-2796AF6D8B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5EAB2C7-132A-4CA2-A5DD-2796AF6D8B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5EAB2C7-132A-4CA2-A5DD-2796AF6D8B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5EAB2C7-132A-4CA2-A5DD-2796AF6D8B99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED77806E-B633-4F74-9AB9-E95989165CB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED77806E-B633-4F74-9AB9-E95989165CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED77806E-B633-4F74-9AB9-E95989165CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED77806E-B633-4F74-9AB9-E95989165CB2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20D9EC29-6D81-4B71-8DD8-0911B08E4094}
+	EndGlobalSection
+EndGlobal

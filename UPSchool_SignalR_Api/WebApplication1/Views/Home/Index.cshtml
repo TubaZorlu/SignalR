@@ -1,0 +1,216 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+@section Scripts
+	{
+	<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(() => {
+
+			//signalR script kodlarımızı yamaya başladık
+
+			//bu adresteki portu sunucu olarak kullanıcaksın ve bu port üzerindne bir bağlantı oluşturucaksın
+
+			// WİTHAUTOMATİCRECOMNNECT ()  bağlantı kesildiğinde sayfayı yenilenemen tekrar bağlantı kurmamızı sağlar parantez içinde nekadar süre istek atacağını vereb,liriz
+			var connection = new signalR.HubConnectionBuilder().withAutomaticReconnect([1000, 2000, 3000, 10000]).withUrl("https://localhost:44353/MyHub").build();
+
+
+			//statusshow u sürekli kullandığım için metoda aldım
+
+			function statusShow() {
+				$("#conStatus").text(connection.connectionState);
+			}
+
+			statusShow();
+
+			connection.start().then(() => {
+
+				statusShow();
+				$("#loading").hide();
+				connection.invoke("GetNames");
+
+
+
+			}).catch((err) => { console.log(err) });
+
+			$("#btnSave").click(() => {
+
+				connection.invoke("SendName", $("#txtName").val()).cath((err) => { console.log(err) })
+			})
+
+			connection.on("ReceiveName", (name) => {
+
+				//console.log(name);
+				//csript içersinde html kodları back-link sembolü ile yazılır
+				$("#namesList").append(`<li class="list-group-item">${name}</li>`)
+			})
+
+			connection.onreconnecting(err => {
+
+				$("#loading").show();
+				statusShow();
+				console.log(err);
+			})
+
+			//yeniden bağlanmayı terminalden test edilebilir
+			connection.onreconnected(err => {
+
+				$("#loading").hide();
+
+				statusShow();
+				console.log(err);
+
+			})
+
+
+			connection.on("ReceiveClientCount", (ClientCount) => {
+
+				$("#clientCount").text(ClientCount);
+			})
+
+
+			connection.on("Notify", (countText) => {
+
+				$("#notify").html(`<div class="alert alert-success">${countText}</div>`)
+			})
+
+
+			connection.on("Error", (errorText) => {
+
+				alert(errorText);
+			})
+
+			connection.on("ReceiveNames", (names) => {
+
+				$("#namesList").empty();
+				names.forEach((item, index) => {
+
+					$("#namesList").append(`<li class="list-group-item">${item}</li>`);
+				})
+			})
+
+			$("#btnRoomName").click(()=>{
+			
+				let name =$("#txtName").val();
+				let roomName=$("input[type=radio]:checked").val();
+
+
+				if(roomName == null)
+				{
+					alert("lütfen şehir seçiniz")
+				}
+				else
+				{
+					connection.invoke("SendNameByGroup", name, roomName).catch((err) => {
+
+						console.log(err);
+					})
+				}
+			})
+
+			connection.on("ReceiveGroup",(name, roomId)=>{
+			
+				let listName;
+
+				if(roomId==1)
+				{
+					listName = "AnkaraRoomList"
+				}
+				else 
+				{
+					listName = "BursaRoomList"
+				}
+					
+
+				$(`#${listName}`).append(`<li class="list-group-item">${name}</li>`)
+
+
+			})
+
+			$("input[type=radio]").change(()=>{
+			
+				let value=$(`input[type=radio]:checked`).val();
+
+				if(value=="Ankara")
+				{
+					connection.invoke("AddGroup",value)
+					connection.invoke("RemoveGroup","Bursa")
+				}
+				else
+				{
+					connection.invoke("AddGroup", value)
+					connection.invoke("RemoveGroup", "Ankara")
+				}
+			})
+
+
+		})
+
+	</script>
+
+}
+
+
+<div class="row">
+
+	<div class="col-md-8 offset-2">
+		<input type="text" class="fom-control" id="txtName" />
+		<hr />
+		<button class="btn btn-warning" id="btnSave">İsmi Kaydet</button>
+	
+		<button  class="btn btn-info" id="btnRoomName">Odaya Kişi Ekle</button>
+		<div class="alert alert-info mt-2">
+			<div class="float-left">
+				Bağlantı Sayısı:<strong id="conStatus"></strong>>
+				,Client Sayısı:<strong id="clientCount"></strong>>
+			</div>
+			<div class="float-right">
+				<div id="loading" class="spinner-grow text-info" role="status">
+					<span class="sr-only"></span>
+				</div>
+
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div id="notify"></div>
+	</div>
+
+	<di class="col-md-8 offset-2">
+		<ul class="list-group" id="namesList"></ul>
+
+	</di>
+</div>
+
+
+<div class="rom">
+	<div class="col-md-8 offset-2">
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="roomgroup" value="Ankara" />
+			<label class="form-check-label">Ankara Odası</label>
+		</div>
+
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="roomgroup" value="Bursa" />
+			<label class="form-check-label">Bursa Odası</label>
+		</div>
+
+		
+
+	</div>
+
+	<div class="col-md-8 offset-2">
+		<div class="row">
+			<div class="col-md-6">
+				<h3>Ankara Odası</h3>
+				<ul class="list-group" id="AnkaraRoomList"> </ul>
+			</div>
+			<div class="col-md-6">
+				<h3>Bursa Odası</h3>
+				<ul class="list-group" id="BursaRoomList"> </ul>
+			</div>
+		</div>
+	</div>
+	
+</div>
